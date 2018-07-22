@@ -1,14 +1,23 @@
-const express = require('express')
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
+const routes = require('./routes')
 const bodyParser = require('body-parser')
-
-const app = express()
 
 app.use(bodyParser.json())
 
-app.get('/status', function (req, res) {
-  res.send({
-    message: 'Hello World!'
+server.listen(8081, function () {
+  console.log('Listening on port 8081')
+})
+routes(app)
+
+io.on('connection', function (socket) {
+  console.log('A user connected')
+
+  socket.on('draw', function (data) {
+    io.emit('draw', data)
+  })
+  socket.on('disconnect', function () {
+    console.log('A user disconnected')
   })
 })
-
-app.listen(8081)
