@@ -14,6 +14,9 @@ routes(app)
 io.on('connection', function (socket) {
   console.log('A user connected')
 
+  socket.on('room', function (room) {
+    console.log('Joining ' + room)
+  })
   socket.on('draw', function (data) {
     io.emit('draw', data)
   })
