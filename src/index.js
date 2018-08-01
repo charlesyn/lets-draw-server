@@ -1,6 +1,6 @@
-var app = require('express')()
-var server = require('http').Server(app)
-var io = require('socket.io')(server)
+const app = require('express')()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
 const routes = require('./routes')
 const bodyParser = require('body-parser')
 
@@ -12,13 +12,16 @@ server.listen(8081, function () {
 routes(app)
 
 io.on('connection', function (socket) {
-  console.log('A user connected')
-
+  let connectedClients = Object.keys(io.of('/').clients().connected)
+  let currentRoom = ''
+  console.log(connectedClients)
   socket.on('room', function (room) {
     console.log('Joining ' + room)
+    socket.join(room)
+    currentRoom = room
   })
   socket.on('draw', function (data) {
-    io.emit('draw', data)
+    socket.broadcast.to(currentRoom).emit('draw', data)
   })
   socket.on('disconnect', function () {
     console.log('A user disconnected')
