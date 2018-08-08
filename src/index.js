@@ -15,10 +15,10 @@ io.on('connection', function (socket) {
   let connectedClients = Object.keys(io.of('/').clients().connected)
   let currentRoom = ''
   console.log(connectedClients)
-  socket.on('room', function (room) {
-    console.log('Joining ' + room)
-    socket.join(room)
-    currentRoom = room
+  socket.on('room', function (roomInfo) {
+    console.log(roomInfo.username + ' has joined ' + roomInfo.room)
+    socket.join(roomInfo.room)
+    currentRoom = roomInfo.room
   })
   socket.on('draw', function (data) {
     socket.broadcast.to(currentRoom).emit('draw', data)
