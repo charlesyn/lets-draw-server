@@ -32,6 +32,9 @@ io.on('connection', function (socket) {
   socket.on('draw', function (data) {
     socket.broadcast.to(currentRoom).emit('draw', data)
   })
+  socket.on('clearCanvas', function (data) {
+    socket.broadcast.to(currentRoom).emit('clearCanvas')
+  })
   socket.on('disconnect', function () {
     socket.broadcast.to(currentRoom).emit('removeUser', username)
     console.log('A user disconnected')
